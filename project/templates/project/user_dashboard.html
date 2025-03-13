@@ -1,0 +1,19 @@
+{% extends 'project/base.html' %}
+
+{% block content %}
+<h1>Your Dashboard</h1>
+
+<p>You have {{ overdue_tasks }} overdue tasks.</p>
+
+<h2>Assigned Tasks</h2>
+<ul>
+    {% for task in tasks %}
+        <li>
+            <strong>{{ task.title }}</strong> - {{ task.get_status_display }}
+            <a href="{% url 'task_detail' task.id %}">View</a>
+        </li>
+    {% empty %}
+        <p>No tasks assigned to you.</p>
+    {% endfor %}
+</ul>
+{% endblock %}

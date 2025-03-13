@@ -1,0 +1,107 @@
+{% extends 'project/base.html' %}
+
+{% block content %}
+<h1>{{ task.title }}</h1>
+
+<!-- Task Information -->
+<div class="card mb-4">
+    <div class="card-body">
+        <p><strong>Description:</strong> {{ task.description }}</p>
+        <p><strong>Due Date:</strong> {{ task.due_date }}</p>
+        <p><strong>Priority:</strong> {{ task.priority }}</p>
+        <p><strong>Status:</strong> {{ task.status }}</p>
+
+        <p><strong>Assigned To:</strong>
+            {% if task.assigned_to.all %}
+                <ul class="list-group">
+                    {% for user in task.assigned_to.all %}
+                        <li class="list-group-item">{{ user.username }}</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No users assigned.</p>
+            {% endif %}
+        </p>
+
+        <p><strong>Category:</strong> {% if task.category %}{{ task.category.name }}{% else %}No category{% endif %}</p>
+
+        <p><strong>Tags:</strong>
+            {% if task.tags.all %}
+                <ul class="list-group">
+                    {% for tag in task.tags.all %}
+                        <li class="list-group-item">{{ tag.name }}</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No tags assigned.</p>
+            {% endif %}
+        </p>
+    </div>
+</div>
+
+<!-- Comments Section -->
+<div class="card mb-4">
+    <div class="card-body">
+        <h3>Comments</h3>
+        {% if comments %}
+            <ul class="list-group">
+                {% for comment in comments %}
+                    <li class="list-group-item">
+                        <strong>{{ comment.user.username }}:</strong> {{ comment.content }} <br>
+                        <small>{{ comment.created_at }}</small>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No comments yet.</p>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Add Comment Form -->
+{% if request.user.is_authenticated %}
+    <div class="card mb-4">
+        <div class="card-body">
+            <h3>Add a Comment</h3>
+            <form method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="form_type" value="comment_form">
+                {{ comment_form.as_p }}
+                <button type="submit" class="btn btn-primary">Post Comment</button>
+            </form>
+        </div>
+    </div>
+{% endif %}
+
+<!-- Attachments Section -->
+<div class="card mb-4">
+    <div class="card-body">
+        <h3>Attachments</h3>
+        {% if attachments %}
+            <ul class="list-group">
+                {% for attachment in attachments %}
+                    <li class="list-group-item">
+                        <a href="{{ attachment.file.url }}" download>{{ attachment.file.name }}</a> (uploaded by {{ attachment.uploaded_by.username }} on {{ attachment.uploaded_at }})
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No attachments.</p>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Attachment Upload -->
+{% if request.user in task.assigned_to.all %}
+    <div class="card mb-4">
+        <div class="card-body">
+            <h3>Upload an Attachment</h3>
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="file" name="attachment" class="form-control" required>
+                <button type="submit" class="btn btn-success mt-2">Upload Attachment</button>
+            </form>
+        </div>
+    </div>
+{% endif %}
+{% endblock %}

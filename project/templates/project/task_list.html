@@ -1,0 +1,108 @@
+{% extends 'project/base.html' %}
+
+{% block content %}
+<!-- Task List Header -->
+<h1>Task List</h1>
+<a href="{% url 'task_create' %}" class="btn btn-success mb-3">Add New Task</a>
+
+<!-- Filter and Search Form -->
+<form method="GET" class="form-inline mb-4">
+    <div class="form-row">
+        <div class="col-md-3">
+            <label for="search">Search:</label>
+            <input type="text" name="search" class="form-control" value="{{ search_query }}" placeholder="Search tasks">
+        </div>
+
+        <div class="col-md-2">
+            <label for="status">Status:</label>
+            <select name="status" class="form-control">
+                <option value="">All</option>
+                <option value="Pending" {% if status_filter == "Pending" %}selected{% endif %}>Pending</option>
+                <option value="In Progress" {% if status_filter == "In Progress" %}selected{% endif %}>In Progress</option>
+                <option value="Completed" {% if status_filter == "Completed" %}selected{% endif %}>Completed</option>
+            </select>
+        </div>
+
+        <div class="col-md-2">
+            <label for="priority">Priority:</label>
+            <select name="priority" class="form-control">
+                <option value="">All</option>
+                <option value="Low" {% if priority_filter == "Low" %}selected{% endif %}>Low</option>
+                <option value="Medium" {% if priority_filter == "Medium" %}selected{% endif %}>Medium</option>
+                <option value="High" {% if priority_filter == "High" %}selected{% endif %}>High</option>
+            </select>
+        </div>
+
+        <div class="col-md-2">
+            <label for="category">Category:</label>
+            <select name="category" class="form-control">
+                <option value="">All</option>
+                {% for category in categories %}
+                    <option value="{{ category.id }}" {% if category_filter == category.id %}selected{% endif %}>
+                        {{ category.name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="col-md-2">
+            <label for="assigned_to">Assigned To:</label>
+            <select name="assigned_to" class="form-control">
+                <option value="">All</option>
+                {% for user in users %}
+                    <option value="{{ user.username }}" {% if assigned_to_filter == user.username %}selected{% endif %}>
+                        {{ user.username }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="col-md-2">
+            <label for="due_date">Due Date:</label>
+            <input type="date" name="due_date" class="form-control" value="{{ due_date_filter }}">
+        </div>
+    </div>
+    <div class="form-row mt-3">
+        <div class="col-md-3">
+            <button type="submit" class="btn btn-primary">Apply Filters</button>
+        </div>
+        <div class="col-md-3">
+            <a href="{% url 'task_list' %}" class="btn btn-secondary">Clear Filters</a>
+        </div>
+    </div>
+</form>
+
+<!-- Task List -->
+<h2>Tasks</h2>
+{% if tasks %}
+<ul class="list-group">
+    {% for task in tasks %}
+        <li class="list-group-item">
+            <div class="d-flex justify-content-between">
+                <div>
+                    <strong>{{ task.title }}</strong> - {{ task.due_date }} - 
+                    <span>Priority: {{ task.priority }}</span> - 
+                    <span>Status: {{ task.status }}</span> - 
+                    <span>Assigned to: 
+                        {% if task.assigned_to.all %}
+                            {{ task.assigned_to.all|join:", " }}
+                        {% else %}
+                            No users assigned
+                        {% endif %}
+                    </span>
+                    <br>
+                    <span>Category: {% if task.category %}{{ task.category.name }}{% else %}None{% endif %}</span>
+                </div>
+                <div class="text-right">
+                    <a href="{% url 'task_detail' task.id %}" class="btn btn-info btn-sm">View</a>
+                    <a href="{% url 'task_update' task.id %}" class="btn btn-warning btn-sm">Edit</a>
+                    <a href="{% url 'task_delete' task.id %}" class="btn btn-danger btn-sm">Delete</a>
+                </div>
+            </div>
+        </li>
+    {% endfor %}
+</ul>
+{% else %}
+    <p>No tasks found.</p>
+{% endif %}
+{% endblock %}

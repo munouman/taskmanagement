@@ -1,0 +1,22 @@
+{% extends 'project/base.html' %}
+
+{% block content %}
+<div class="container">
+    <h1 class="my-4 text-center text-primary">Profile</h1>
+
+    <div class="card shadow-lg">
+        <div class="card-body">
+            <h3 class="card-title">User Information</h3>
+
+            <p><strong>Username:</strong> {{ profile.user.username }}</p>
+            <p><strong>Email:</strong> {{ profile.user.email }}</p>
+            <p><strong>Full Name:</strong> {{ profile.user.get_full_name }}</p>
+
+            <div class="mt-4 text-center">
+                <a href="{% url 'profile_update' %}" class="btn btn-warning btn-lg">Update Profile</a>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

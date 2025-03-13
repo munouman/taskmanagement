@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Task Management{% endblock %}</title>
+    
+    <!-- Bootstrap CSS (CDN) -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Header with Navigation -->
+    <header class="bg-primary text-white p-4">
+        <div class="container">
+            <h1 class="d-inline-block">Task Management</h1>
+            <nav class="float-right">
+                <a href="{% url 'task_list' %}" class="btn btn-outline-light btn-sm mr-2">Tasks</a>
+                <a href="{% url 'user_dashboard' %}" class="btn btn-outline-light btn-sm mr-2">Dashboard</a>
+                <a href="{% url 'profile' %}" class="btn btn-outline-light btn-sm mr-2">Profile</a>
+
+                {% if user.is_authenticated %}
+                    <!-- Logout form -->
+                    <form action="{% url 'logout' %}" method="POST" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-outline-light btn-sm">Logout</button>
+                    </form>
+                {% else %}
+                    <a href="{% url 'login' %}" class="btn btn-outline-light btn-sm">Login</a>
+                {% endif %}
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <div class="container my-4">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white text-center p-3">
+        <p>&copy; 2025 Task Management. All rights reserved.</p>
+    </footer>
+
+    <!-- Bootstrap JS and dependencies (CDN) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

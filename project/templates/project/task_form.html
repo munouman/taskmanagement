@@ -1,0 +1,28 @@
+{% extends 'project/base.html' %}
+
+{% block content %}
+<h1>Create/Update Task</h1>
+
+<!-- Task Form Container -->
+<div class="card">
+    <div class="card-body">
+        <form method="post">
+            {% csrf_token %}
+            
+            <!-- Render Form Fields -->
+            <div class="form-group">
+                {{ form.as_p }} <!-- This renders the form fields as paragraphs -->
+            </div>
+            
+            <!-- Submit Button -->
+            <button type="submit" class="btn btn-primary btn-block">Save Task</button>
+        </form>
+
+        <!-- Back to Task List Link -->
+        <div class="mt-3 text-center">
+            <a href="{% url 'task_list' %}" class="btn btn-secondary btn-sm">Back to Task List</a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

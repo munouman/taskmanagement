@@ -1,0 +1,75 @@
+{% extends 'project/base.html' %}
+{% load custom_filters %}  <!-- Load the custom filter -->
+
+{% block content %}
+<div class="container">
+    <h1 class="my-4 text-center text-primary">Register</h1>
+
+    <div class="card shadow-lg">
+        <div class="card-body">
+            <form method="POST">
+                {% csrf_token %}
+                
+                <!-- Username Field -->
+                <div class="form-group">
+                    <label for="id_username">Username</label>
+                    {{ form.username|add_class:"form-control" }}  <!-- Using the custom filter here -->
+                    {% if form.username.errors %}
+                        <div class="invalid-feedback d-block">
+                            {% for error in form.username.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Email Field -->
+                <div class="form-group">
+                    <label for="id_email">Email</label>
+                    {{ form.email|add_class:"form-control" }}  <!-- Using the custom filter here -->
+                    {% if form.email.errors %}
+                        <div class="invalid-feedback d-block">
+                            {% for error in form.email.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Password Field -->
+                <div class="form-group">
+                    <label for="id_password1">Password</label>
+                    {{ form.password1|add_class:"form-control" }}  <!-- Using the custom filter here -->
+                    {% if form.password1.errors %}
+                        <div class="invalid-feedback d-block">
+                            {% for error in form.password1.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Confirm Password Field -->
+                <div class="form-group">
+                    <label for="id_password2">Confirm Password</label>
+                    {{ form.password2|add_class:"form-control" }}  <!-- Using the custom filter here -->
+                    {% if form.password2.errors %}
+                        <div class="invalid-feedback d-block">
+                            {% for error in form.password2.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block btn-lg">Register</button>
+            </form>
+
+            <div class="text-center mt-3">
+                <p>Already have an account? <a href="{% url 'login' %}" class="text-primary">Login here</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
